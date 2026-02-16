@@ -6,6 +6,7 @@ import { UserCredentialsEntity } from '../entities/userCredentials.entity';
 
 import { AUTH_REPOSITORY } from './auth.repository.interface';
 import { AuthRepository } from './auth.repository';
+import { SendUserRegisteredHandler } from './handlers/send-user-registered.handler';
 
 
 @Module({
@@ -17,6 +18,7 @@ import { AuthRepository } from './auth.repository';
     controllers: [AuthController],
     providers: [
         AuthService,
+        SendUserRegisteredHandler,
         {
           provide: AUTH_REPOSITORY,
           useClass: AuthRepository,

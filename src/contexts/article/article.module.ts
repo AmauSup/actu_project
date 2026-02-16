@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common' ;
-import { ArticleService } from './article.service';
+import { ArticleService, AuthorService } from './article.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import  { AuthorCredentialsEntity } from '../entities/authorCredentials.entity';
 import { ArticleCredentialsEntity } from '../entities/articleCredentials.entity'; 
-import { AuthorService } from './article.service';
+import { ArticleController, AuthorController } from './article.controller';
 
 import { ARTICLE_REPOSITORY } from './article.repository.interface';
 import { ArticleRepository } from './article.repository';
@@ -14,13 +14,11 @@ import { AuthorRepository } from './article.repository';
 @Module({
     imports: [
       TypeOrmModule.forFeature([
-        AuthorCredentialsEntity
-      ]),
-      TypeOrmModule.forFeature([
+        AuthorCredentialsEntity,
         ArticleCredentialsEntity
       ])
     ],
-    controllers:[],
+    controllers:[ArticleController, AuthorController],
     providers: [
         ArticleService,
         {
@@ -34,7 +32,7 @@ import { AuthorRepository } from './article.repository';
         }
       ],
       
-    exports: []
+    exports: [ArticleService, AuthorService]
 })
 
 export class ArticleModule {}

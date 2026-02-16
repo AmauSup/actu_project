@@ -11,6 +11,8 @@ import { AuthModule } from './contexts/auth/auth.module';
 import { ArticleModule } from './contexts/article/article.module';
 import { ArticleService } from './contexts/article/article.service';
 import { AuthService } from './contexts/auth/auth.service';
+import { eventModule } from './core/events/event.module';
+import { MailerModule } from './core/mailer/mailer.module';
 
 @Module({
   imports: [
@@ -38,7 +40,10 @@ import { AuthService } from './contexts/auth/auth.service';
       }),
     }),
 
-    AuthModule,ArticleModule
+    AuthModule,
+    ArticleModule,
+    eventModule,
+    MailerModule
   ],
   controllers: [AppController],
   providers: [AppService],

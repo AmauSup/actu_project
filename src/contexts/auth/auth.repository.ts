@@ -26,8 +26,27 @@ async findCredentialByEmail(
     });
   }
 
-async deleteUserByEmail(email: string): Promise<boolean> {
-  const result = await this.credentialRepository.delete({ email });
+async findCredentialById(id: number): Promise<UserCredentialsEntity | null> {
+    return this.credentialRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async findAllUsers(): Promise<UserCredentialsEntity[]> {
+    return this.credentialRepository.find();
+  }
+
+  async updateUser(id: number, userData: Partial<UserCredentialsEntity>): Promise<UserCredentialsEntity> {
+    await this.credentialRepository.update(id, userData);
+    const updatedUser = await this.findCredentialById(id);
+    if (!updatedUser) {
+      throw new Error('User not found after update');
+    }
+    return updatedUser;
+  }
+
+async deleteUserById(id: number): Promise<boolean> {
+  const result = await this.credentialRepository.delete({ id });
 
   return true;
 }

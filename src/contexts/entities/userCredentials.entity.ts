@@ -2,8 +2,8 @@ import {Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn} from "t
 
 @Entity('user')
 export class UserCredentialsEntity{
-    @PrimaryGeneratedColumn('uuid')//clé unique
-    id: string;
+    @PrimaryGeneratedColumn()//clé unique auto-incrémentée
+    id: number;
     
     @Column({name: 'password_h', type:"varchar", length:255})//colonne normal
     passwordHash:string;
