@@ -3,8 +3,8 @@ import { ArticleCredentialsEntity } from './articleCredentials.entity';
 
 @Entity('author')
 export class AuthorCredentialsEntity{
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
     
    
 

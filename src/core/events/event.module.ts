@@ -10,4 +10,4 @@ import { NestEventBusService } from "./nest-event-bus.service";
     exports:[EVENT_BUS]
 })
 
-export class eventModule {}
+export class EventModule {}

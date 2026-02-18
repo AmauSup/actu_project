@@ -36,6 +36,16 @@ async findCredentialById(id: number): Promise<UserCredentialsEntity | null> {
     return this.credentialRepository.find();
   }
 
+  async findAllUsersPaginated(page: number, pageSize: number): Promise<{ items: UserCredentialsEntity[]; total: number }> {
+    const [items, total] = await this.credentialRepository.findAndCount({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      order: { id: 'DESC' },
+    });
+
+    return { items, total };
+  }
+
   async updateUser(id: number, userData: Partial<UserCredentialsEntity>): Promise<UserCredentialsEntity> {
     await this.credentialRepository.update(id, userData);
     const updatedUser = await this.findCredentialById(id);

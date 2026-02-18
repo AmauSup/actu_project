@@ -10,9 +10,12 @@ import {
     Param,
     Patch,
     Post,
+    Query,
+    UseGuards,
   } from '@nestjs/common';
   import { RegisterDTO, LoginDTO, UpdateUserDTO } from './auth.types';
   import { AuthService } from './auth.service';
+  import { ApiTokenGuard } from 'src/core/http/guards/api-token.guard';
   
   @Controller('auth')
   export class AuthController {
@@ -30,27 +33,33 @@ import {
       return this.authService.login(body);
     }
 
+    @UseGuards(ApiTokenGuard)
     @Get('users')
     @HttpCode(HttpStatus.OK)
-    getAllUsers() {
-      return this.authService.getAllUsers();
+    getAllUsers(@Query('page') page?: string, @Query('pageSize') pageSize?: string) {
+      const pageNumber = Math.max(1, Number(page ?? 1));
+      const pageSizeNumber = Math.max(1, Number(pageSize ?? 10));
+      return this.authService.getAllUsers(pageNumber, pageSizeNumber);
     }
 
+    @UseGuards(ApiTokenGuard)
     @Get('users/:id')
     @HttpCode(HttpStatus.OK)
-    getUserById(@Param('id') id: number) {
-      return this.authService.getUserById(id);
+    getUserById(@Param('id') id: string) {
+      return this.authService.getUserById(Number(id));
     }
 
+    @UseGuards(ApiTokenGuard)
     @Patch('users/:id')
     @HttpCode(HttpStatus.OK)
-    updateUser(@Param('id') id: number, @Body() body: UpdateUserDTO) {
-      return this.authService.updateUser(id, body);
+    updateUser(@Param('id') id: string, @Body() body: UpdateUserDTO) {
+      return this.authService.updateUser(Number(id), body);
     }
 
+    @UseGuards(ApiTokenGuard)
     @Delete('users/:id')
     @HttpCode(HttpStatus.OK)
-    deleteUser(@Param('id') id: number) {
-      return this.authService.deleteUser(id);
+    deleteUser(@Param('id') id: string) {
+      return this.authService.deleteUser(Number(id));
     }
   }

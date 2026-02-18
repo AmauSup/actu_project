@@ -1,25 +1,28 @@
 import { Module } from '@nestjs/common' ;
-import { ArticleService, AuthorService } from './article.service';
+import { ArticleService, AuthorService, CategoryService } from './article.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import  { AuthorCredentialsEntity } from '../entities/authorCredentials.entity';
-import { ArticleCredentialsEntity } from '../entities/articleCredentials.entity'; 
-import { ArticleController, AuthorController } from './article.controller';
+import { AuthorCredentialsEntity } from '../entities/authorCredentials.entity';
+import { ArticleCredentialsEntity } from '../entities/articleCredentials.entity';
+import { CategoryCredentialsEntity } from '../entities/categoryCredentials.entity';
+import { ArticleController, AuthorController, CategoryController } from './article.controller';
 
-import { ARTICLE_REPOSITORY } from './article.repository.interface';
-import { ArticleRepository } from './article.repository';
-
-import { AUTHOR_REPOSITORY } from './article.repository.interface';
-import { AuthorRepository } from './article.repository';
+import { ARTICLE_REPOSITORY, AUTHOR_REPOSITORY, CATEGORY_REPOSITORY } from './article.repository.interface';
+import { ArticleRepository, AuthorRepository, CategoryRepository } from './article.repository';
+import { NewsApiModule } from 'src/core/newsapi/newsapi.module';
+import { PresenterService } from 'src/presenter.service';
 
 @Module({
     imports: [
       TypeOrmModule.forFeature([
         AuthorCredentialsEntity,
-        ArticleCredentialsEntity
-      ])
+        ArticleCredentialsEntity,
+        CategoryCredentialsEntity
+      ]),
+      NewsApiModule,
     ],
-    controllers:[ArticleController, AuthorController],
+    controllers:[ArticleController, AuthorController, CategoryController],
     providers: [
+        PresenterService,
         ArticleService,
         {
           provide: ARTICLE_REPOSITORY,
@@ -29,10 +32,15 @@ import { AuthorRepository } from './article.repository';
         {
           provide: AUTHOR_REPOSITORY,
           useClass: AuthorRepository,
+        },
+        CategoryService,
+        {
+          provide: CATEGORY_REPOSITORY,
+          useClass: CategoryRepository,
         }
       ],
       
-    exports: [ArticleService, AuthorService]
+    exports: [ArticleService, AuthorService, CategoryService]
 })
 
 export class ArticleModule {}

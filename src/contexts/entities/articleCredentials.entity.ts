@@ -1,12 +1,12 @@
-import {Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, ManyToOne, UpdateDateColumn} from "typeorm"
-import  { AuthorCredentialsEntity } from './authorCredentials.entity';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, UpdateDateColumn, ManyToMany, JoinTable } from "typeorm"
+import { AuthorCredentialsEntity } from './authorCredentials.entity';
+import { CategoryCredentialsEntity } from './categoryCredentials.entity';
 @Entity('article')
 export class ArticleCredentialsEntity{
     @PrimaryGeneratedColumn('uuid')
     id: string;
     
-    @Column({name: 'categorie', type:"varchar", length:255})
-    categorie:string;
+    
 
     @Column({name: 'name', type:"varchar", length:255})
     name :string;
@@ -16,7 +16,7 @@ export class ArticleCredentialsEntity{
     
 
     @Column({name: 'description', type:"varchar", length:255})
-    descrition:string;
+    description:string;
 
     @Column({ type: 'text' })
     content: string;
@@ -29,6 +29,14 @@ export class ArticleCredentialsEntity{
     
     @Column({ nullable: true })
     imageUrl: string;
+
+    @ManyToMany(() => CategoryCredentialsEntity)
+    @JoinTable({
+        name: 'article_category',
+        joinColumn: { name: 'article_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
+    })
+    categories?: CategoryCredentialsEntity[];
 
     
     

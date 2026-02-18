@@ -8,5 +8,6 @@ export interface IAuthRepository{
     findCredentialByEmail(email:string): Promise<UserCredentialsEntity | null>
     findCredentialById(id: number): Promise<UserCredentialsEntity | null>
     findAllUsers(): Promise<UserCredentialsEntity[]>
+    findAllUsersPaginated(page: number, pageSize: number): Promise<{ items: UserCredentialsEntity[]; total: number }>
     updateUser(id: number, userData: Partial<UserCredentialsEntity>): Promise<UserCredentialsEntity>
     }

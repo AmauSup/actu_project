@@ -1,5 +1,3 @@
-
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -11,8 +9,9 @@ import { AuthModule } from './contexts/auth/auth.module';
 import { ArticleModule } from './contexts/article/article.module';
 import { ArticleService } from './contexts/article/article.service';
 import { AuthService } from './contexts/auth/auth.service';
-import { eventModule } from './core/events/event.module';
+import { EventModule } from './core/events/event.module';
 import { MailerModule } from './core/mailer/mailer.module';
+import { PermissionsModule } from './core/permissions/permissions.module';
 
 @Module({
   imports: [
@@ -42,10 +41,12 @@ import { MailerModule } from './core/mailer/mailer.module';
 
     AuthModule,
     ArticleModule,
-    eventModule,
-    MailerModule
+    EventModule,
+    MailerModule,
+    PermissionsModule
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [],
 })
 export class AppModule {}

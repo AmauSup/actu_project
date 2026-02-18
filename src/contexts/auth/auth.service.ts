@@ -3,11 +3,11 @@ import { AUTH_REPOSITORY } from './auth.repository.interface';
 import { IAuthRepository } from './auth.repository.interface';
 import { UserCredentialsEntity} from '../entities/userCredentials.entity'
 import * as bcrypt from 'bcrypt';
-import { DomainError } from 'src/core/errors/domaine-error';
-import { PlayerNotFound } from './errors/auth.errors';
+import { PlayerNotFound, UserAlreadyExists } from './errors/auth.errors';
 import { RegisterDTO, LoginDTO, UpdateUserDTO } from './auth.types';
 import { EVENT_BUS, EventBusPort } from 'src/core/events/event-bus.port';
 import { UserRegisteredEvent } from './events/user-registered.event';
+import { DEFAULT_USER_PERMISSIONS } from 'src/core/permissions/permissions.constants';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
     const existingUser = await this.authRepo.findCredentialByEmail(dto.email);
 
     if (existingUser) {
-      throw new BadRequestException('Email already exists');
+      throw new UserAlreadyExists();
     }
     
     const passwordHash = await bcrypt.hash(dto.password, 10);
@@ -29,9 +29,11 @@ export class AuthService {
       email: dto.email,
     }))
 
+    // Créer l'utilisateur avec les permissions par défaut
     return this.authRepo.createUser({
       email: dto.email,
       passwordHash,
+      permissions: DEFAULT_USER_PERMISSIONS,
     });
   }
 
@@ -51,8 +53,19 @@ export class AuthService {
     return { user };
   }
 
-  async getAllUsers(): Promise<UserCredentialsEntity[]> {
-    return this.authRepo.findAllUsers();
+  async getAllUsers(page = 1, pageSize = 10): Promise<{ data: UserCredentialsEntity[]; meta: { page: number; pageSize: number; total: number; totalPages: number } }> {
+    const { items, total } = await this.authRepo.findAllUsersPaginated(page, pageSize);
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+    return {
+      data: items,
+      meta: {
+        page,
+        pageSize,
+        total,
+        totalPages,
+      },
+    };
   }
 
   async getUserById(id: number): Promise<UserCredentialsEntity> {
@@ -87,7 +100,7 @@ export class AuthService {
     if (dto.email) {
       const existingUser = await this.authRepo.findCredentialByEmail(dto.email);
       if (existingUser && existingUser.id !== user.id) {
-        throw new BadRequestException('Email already exists');
+        throw new UserAlreadyExists();
       }
       updateData.email = dto.email;
     }

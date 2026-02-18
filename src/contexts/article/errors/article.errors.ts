@@ -32,3 +32,48 @@ export class AuthorHasArticles extends DomainError {
         });
     }
 }
+
+export class ArticleAlreadyExists extends DomainError {
+    constructor() {
+        super({
+            code: 'ARTICLE_ALREADY_EXISTS',
+            statusCode: 400,
+            message: 'Article already exists',
+            fields: { name: ['An article with this name already exists'] }
+        });
+    }
+}
+
+export class AuthorAlreadyExists extends DomainError {
+    constructor() {
+        super({
+            code: 'AUTHOR_ALREADY_EXISTS',
+            statusCode: 400,
+            message: 'Author already exists',
+            fields: { author: ['An author with this name already exists'] }
+        });
+    }
+}
+
+export class CategoryNotFound extends DomainError {
+    constructor(missingCategoryIds?: string[]) {
+        super({
+            code: 'CATEGORY_NOT_FOUND',
+            statusCode: 404,
+            message: 'One or more categories do not exist',
+            fields: { categoryIds: [`Categories not found: ${missingCategoryIds?.join(', ') || 'unknown'}`] },
+            details: { missingCategoryIds }
+        });
+    }
+}
+
+export class CategoryAlreadyExists extends DomainError {
+    constructor() {
+        super({
+            code: 'CATEGORY_ALREADY_EXISTS',
+            statusCode: 400,
+            message: 'Category already exists',
+            fields: { name: ['A category with this name or slug already exists'] }
+        });
+    }
+}

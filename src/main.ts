@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from './contexts/auth/auth.module'
 
 import { buildGlobalValidationPipe } from './core/http/validation/validation.pipe';
 import { HttpExceptionFilter } from './core/http/http-exception.filter';
